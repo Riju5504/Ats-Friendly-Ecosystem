@@ -23,7 +23,7 @@ function App() {
     setError(null);
     setAnalysisResult(null);
     try {
-      const response = await fetch('http://localhost:5000/api/analyze-resume', {
+      const response = await fetch('https://ats-friendly-ecosystem-beta.vercel.app/api/analyze-resume', {
         method: 'POST',
         body: formData,
       });
