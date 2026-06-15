@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://ats-friendly-ecosystem-XXXX.onrender.com/api';
+const API_BASE_URL = 'https://ats-friendly-ecosystem.onrender.com/api';
 
 export const analyzeResume = async (formData) => {
   try {
