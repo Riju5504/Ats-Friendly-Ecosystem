@@ -7,10 +7,17 @@ const resumeRoutes = require('./routes/resume');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: 'http://localhost:3000' }));
+// FIXED CORS - allows both localhost and Vercel
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://ats-friendly-ecosystem-pb1f.vercel.app'
+  ]
+}));
+
 app.use(express.json());
 
-// ✅ FIXED: matches what App.js calls
+// API Routes
 app.use('/api/analyze-resume', resumeRoutes);
 
 app.get('/', (req, res) => res.send('ATS Backend Running ✅'));

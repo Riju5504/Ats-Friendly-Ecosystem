@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@vercel/node": "^5.8.17",
     "express": "^5.2.1",
+    "mongodb": "^7.3.0",
     "mongoose": "^9.6.3",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",

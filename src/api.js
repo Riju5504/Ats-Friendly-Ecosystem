@@ -1,15 +1,13 @@
-const API_BASE_URL = 'https://ats-friendly-ecosystem-beta.vercel.app/api';
+const API_BASE_URL = 'https://ats-friendly-ecosystem-a2etkvszo-subhagata-sinha-s-projects.vercel.app/api';
 
 export const analyzeResume = async (formData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/resume`, {
+    const response = await fetch(`${API_BASE_URL}/analyze-resume`, {
       method: 'POST',
       body: formData,
     });
 
-    if (!response.ok) {
-      throw new Error('Server error: ' + response.status);
-    }
+    if (!response.ok) throw new Error('Server error: ' + response.status);
 
     return await response.json();
   } catch (err) {

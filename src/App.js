@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import './App.css';
+import { analyzeResume } from './api';
 
 function App() {
   const [theme, setTheme] = useState('dark');
   const [activeBox, setActiveBox] = useState(0);
-
   const [selectedFile, setSelectedFile] = useState(null);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,15 +23,10 @@ function App() {
     setError(null);
     setAnalysisResult(null);
     try {
-      const response = await fetch('https://ats-friendly-ecosystem-beta.vercel.app/api/analyze-resume', {
-        method: 'POST',
-        body: formData,
-      });
-      if (!response.ok) throw new Error(`Server error: ${response.status}`);
-      const data = await response.json();
+      const data = await analyzeResume(formData);
       setAnalysisResult(data);
     } catch (err) {
-      setError('Could not connect to backend. Make sure port 5000 is running.');
+      setError(err.message);
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -41,21 +36,16 @@ function App() {
   return (
     <div className={`app-container ${theme}-theme`}>
 
-      {/* Theme Toggle */}
       <button onClick={toggleTheme} className="mini-theme-icon-btn" type="button">
         {theme === 'dark' ? '☀️' : '🌙'}
       </button>
 
-      {/* Header */}
       <header className="main-header">
         <h1>ATS Friendly Ecosystem</h1>
         <p className="subtitle">Smart Resume Analysis & ATS Optimization Platform</p>
       </header>
 
-      {/* Main Content */}
       <main className="main-content-layout">
-
-        {/* 4 Cards Row */}
         <div className="squares-grid">
           {[
             { id: 1, icon: '💡', title: 'What do you mean by ATS?', close: '▶ Read Wiki' },
@@ -79,7 +69,6 @@ function App() {
           ))}
         </div>
 
-        {/* Accordion Info Box */}
         {activeBox !== 0 && (
           <div className="details-accordion-box content-fade">
             {activeBox === 1 && (
@@ -108,14 +97,11 @@ function App() {
             )}
           </div>
         )}
-
       </main>
 
-      {/* Upload Card */}
       <div className="upload-section-wrapper">
         <div className="upload-card">
 
-          {/* Top row */}
           <div className="upload-card-top">
             <div className="upload-card-title-group">
               <div className="upload-card-icon">📄</div>
@@ -133,7 +119,6 @@ function App() {
 
           <hr className="upload-divider" />
 
-          {/* Bottom row */}
           <div className="upload-card-bottom">
             <input
               type="file"
@@ -152,17 +137,13 @@ function App() {
             </button>
           </div>
 
-          {/* Error */}
           {error && (
             <p style={{ color: 'red', marginTop: '12px' }}>{error}</p>
           )}
 
-          {/* ✅ ADDED — Beautiful Score Card (replaces raw JSON) */}
           {analysisResult && (
             <div className="ats-score-card content-fade">
-
               <h3 className="ats-score-title">Your Score</h3>
-
               <div className="ats-score-circle">
                 <span
                   className="ats-score-number"
@@ -212,14 +193,12 @@ function App() {
               <div className="ats-score-meta">
                 <p>📄 {analysisResult.fileName}</p>
               </div>
-
             </div>
           )}
 
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="footer-section">
         <p>© 2026 ATS Friendly Ecosystem</p>
         <p className="dev-credit">Developed by <span>Subhagata Sinha</span></p>
