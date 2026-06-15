@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://ats-friendly-ecosystem-a2etkvszo-subhagata-sinha-s-projects.vercel.app/api';
+const API_BASE_URL = 'https://ats-friendly-ecosystem-XXXX.onrender.com/api';
 
 export const analyzeResume = async (formData) => {
   try {
