@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import { analyzeResume } from './api';
+import ResultsPage from './ResultsPage';
 
 function App() {
   const [theme, setTheme] = useState('dark');
@@ -9,6 +10,7 @@ function App() {
   const [analysisResult, setAnalysisResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showResultsPage, setShowResultsPage] = useState(false);
 
   const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
 
@@ -25,6 +27,7 @@ function App() {
     try {
       const data = await analyzeResume(formData);
       setAnalysisResult(data);
+      setShowResultsPage(true);
     } catch (err) {
       setError(err.message);
       console.error(err);
@@ -33,6 +36,30 @@ function App() {
     }
   };
 
+  const handleBackFromResults = () => {
+    setShowResultsPage(false);
+    setAnalysisResult(null);
+    setSelectedFile(null);
+    setError(null);
+  };
+
+  // Show Results Page after analysis
+  if (showResultsPage && analysisResult) {
+    return (
+      <div className={`app-container ${theme}-theme`}>
+        <button onClick={toggleTheme} className="mini-theme-icon-btn" type="button">
+          {theme === 'dark' ? '☀️' : '🌙'}
+        </button>
+        <ResultsPage 
+          result={analysisResult} 
+          fileName={selectedFile?.name || analysisResult.fileName}
+          onBack={handleBackFromResults}
+        />
+      </div>
+    );
+  }
+
+  // Main Upload Page
   return (
     <div className={`app-container ${theme}-theme`}>
 
@@ -139,61 +166,6 @@ function App() {
 
           {error && (
             <p style={{ color: 'red', marginTop: '12px' }}>{error}</p>
-          )}
-
-          {analysisResult && (
-            <div className="ats-score-card content-fade">
-              <h3 className="ats-score-title">Your Score</h3>
-              <div className="ats-score-circle">
-                <span
-                  className="ats-score-number"
-                  style={{
-                    color: analysisResult.atsScore >= 75 ? '#48bb78'
-                         : analysisResult.atsScore >= 50 ? '#f6ad55'
-                         : '#fc8181'
-                  }}
-                >
-                  {analysisResult.atsScore}
-                </span>
-                <span className="ats-score-total">/100</span>
-              </div>
-
-              <p className="ats-score-label">
-                {analysisResult.atsScore >= 75 ? '✅ Good Standing'
-               : analysisResult.atsScore >= 50 ? '⚠️ Needs Improvement'
-               : '❌ Poor — Revamp Needed'}
-              </p>
-
-              <div className="ats-score-rows">
-                {[
-                  { label: 'ATS Essentials',   value: analysisResult.categories?.essentials },
-                  { label: 'Sections',         value: analysisResult.categories?.sections },
-                  { label: 'Technical Skills', value: analysisResult.categories?.technical },
-                  { label: 'HR Red Flags',     value: analysisResult.categories?.hrRedFlags },
-                  { label: 'Discrimination',   value: analysisResult.categories?.discrimination },
-                  { label: 'Seniority',        value: analysisResult.categories?.seniority },
-                ].map((item) => (
-                  <div key={item.label} className="ats-score-row">
-                    <span className="ats-row-label">{item.label}</span>
-                    <span
-                      className="ats-row-badge"
-                      style={{
-                        backgroundColor:
-                          item.value >= 75 ? '#1a7a4a'
-                        : item.value >= 50 ? '#b45309'
-                        : '#b91c1c',
-                      }}
-                    >
-                      {item.value}%
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="ats-score-meta">
-                <p>📄 {analysisResult.fileName}</p>
-              </div>
-            </div>
           )}
 
         </div>
